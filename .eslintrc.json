@@ -1,0 +1,27 @@
+{
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react"
+  ],
+  "plugins": [
+    "prettier"
+  ],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 2016,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "env": {
+    "es6": true,
+    "jest": true, /* so that ES lint understands we are using jest */
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "DEBUG": false
+  }
+}

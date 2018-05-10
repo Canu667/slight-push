@@ -1,0 +1,84 @@
+body {
+   /* background: black;*/
+}
+
+.tasks-table-component {
+
+}
+
+.task {
+    display: flex;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+
+.day-task, .week-task {
+    display: flex;
+    justify-content: space-evenly;
+    width: '100%';
+}
+.week-task > span {
+    flex-grow: 1;
+    flex-basis: 0;
+}
+
+.week-task {
+    margin-left: 10px;
+    margin-top: 15px;
+}
+
+.day-task-label {
+    flex: 1;
+    margin-right: 5px;
+}
+
+.day-task-signs {
+}
+
+.task-label, .task-button-pomodoro, .task-button-prediction {
+    flex: 0.1;
+}
+
+.unfinished {
+    color: lightgray;
+}
+
+.week {
+    display: flex;
+    justify-content: space-around;
+    border: 1px solid black;
+    padding: 20px 20px;
+}
+
+.day {
+    padding: 20px 20px;
+    border: 1px solid black;
+}
+
+.selected-day {
+    border: 2px blue solid;
+}
+
+.today {
+    background-color: indianred;
+}
+
+#pomodoro-timer {
+    display: inline-block;
+    height: 150px;
+    width: 150px;
+    border: 1px solid black;
+}
+
+#pomodoro-timer-time {
+    text-align: center;
+}
+
+#pomodoro-timer-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+#pomodoro-timer-buttons .button {
+    width: 50%;
+}
