@@ -44,8 +44,6 @@ function tasks(state = initialState.tasks, action) {
             return action.task;
         }
         case GET_TASKS:
-            // console.log('TEST---');
-            // console.log(action);
             return Object.assign({}, action.tasks);
         default:
             return state;

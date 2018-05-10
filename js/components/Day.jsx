@@ -27,7 +27,7 @@ class Day extends React.Component {
     /* eslint no-param-reassign: [0] */
     prepareTaskLabels() {
         return Object.keys(this.props.tasks).reduce((taskLabels, taskId) => {
-            // console.log(this.props.tasks);
+
             const nameKey = this.props.tasks[taskId].name;
             const completedSigns = Object.keys(this.props.tasks[taskId].completed).length;
             const estimated = this.props.tasks[taskId].estimated - completedSigns;
@@ -50,9 +50,6 @@ class Day extends React.Component {
     render() {
         const classes = (this.props.isToday ? 'day today' : 'day') + (this.props.isSelected ? ' selected-day' : '');
         const taskLabels = this.prepareTaskLabels();
-
-        // console.log(taskLabels);
-        // {taskLabels[taskId].tasks..map(() =><span className="glyphicon glyphicon-ok-sign"/>)}
 
         return (
                 <div className={classes} onClick={() => {

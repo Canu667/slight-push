@@ -10,7 +10,6 @@ class WeekSummary extends Component {
             return [];
         }
 
-        console.log(tasks);
         return tasksKeys.reduce((previousArray, currentDate) => {
             if (this.props.startOfTheWeek.startOf('minute').toDate().getTime() < currentDate) {
                 Object.keys(tasks[currentDate]).forEach((taskId) => {
@@ -41,7 +40,7 @@ class WeekSummary extends Component {
                }
 
                const pomodorosEstimated = pomodoros[date][taskId].estimated || 0;
-               const pomodorosCompleted = Object.keys(pomodoros[date][taskId].completed).length || 0;
+               const pomodorosCompleted = pomodoros[date][taskId].completed ? Object.keys(pomodoros[date][taskId].completed).length : 0;
 
                estimates[taskId].estimated += pomodorosEstimated;
                estimates[taskId].completed += pomodorosCompleted;
@@ -55,9 +54,6 @@ class WeekSummary extends Component {
     render() {
         const finishedTasks = this.getFinishedTasks();
         const estimates = this.getEstimates();
-
-        console.log(estimates);
-        console.log(this.props.completedTasks);
 
         return (
             <div className="week-summary">
