@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { ADD_TASK, GET_TASKS, GET_COMPLETED_TASKS, SELECT_DAY } from '../actions/pomodoro';
+import { ADD_TASK, GET_TASKS, GET_COMPLETED_TASKS, SELECT_DAY, TOGGLE_POMODORO, CHANGE_USER } from '../actions/pomodoro';
 import initialState from '../initialState';
 
 function completedTasks(doneTasks = initialState.completedTasks, action) {
@@ -24,6 +24,16 @@ function today(state = initialState.today) {
     return state;
 }
 
+function currentUser(state = initialState.currentUser, action) {
+    switch (action.type) {
+        case CHANGE_USER: {
+            return action.currentUser;
+        }
+        default:
+            return state;
+    }
+}
+
 function selectedDay(state = initialState.selectedDay, action) {
     switch (action.type) {
         case SELECT_DAY: {
@@ -36,6 +46,16 @@ function selectedDay(state = initialState.selectedDay, action) {
 
 function startOfTheWeek(state = initialState.startOfTheWeek) {
     return state;
+}
+
+function isPomodoroStarted(state = initialState.isPomodoroStarted, action) {
+    switch (action.type) {
+        case TOGGLE_POMODORO: {
+            return !state;
+        }
+        default:
+            return state;
+    }
 }
 
 function tasks(state = initialState.tasks, action) {
@@ -55,7 +75,9 @@ const slightEdgeApp = combineReducers({
     startOfTheWeek,
     completedTasks,
     tasks,
-    selectedDay
+    selectedDay,
+    isPomodoroStarted,
+    currentUser
 });
 
 export default slightEdgeApp

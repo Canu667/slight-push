@@ -5,17 +5,16 @@ import {connect} from 'react-redux'
 import Week from './Week';
 import TasksTable from './Tasks/TasksTable';
 import WeekSummary from './WeekSummary';
+import PomodoroTimer from './PomodoroTimer';
+import SignIn from './SignIn';
+import SignOut from './SignOut';
 // import GraphSlightEdge from './GraphSlightEdge';
-import {getTasksThunk, getCompletedTasksThunk, watchTaskAddedEvent, watchTaskFinishedEvent} from '../actions/pomodoro';
+import {watchUserLoginEvent} from '../actions/pomodoro';
 
 class App extends Component {
     constructor(props) {
         super(props);
-
-        this.props.getTasks();
-        this.props.getCompletedTasks();
-        this.props.watchTaskAddedEvent();
-        this.props.watchTaskFinishedEvent();
+        this.props.watchUserLoginEvent();
     }
 
     /* eslint no-param-reassign: [0] */
@@ -29,7 +28,7 @@ class App extends Component {
         }
 
         return tasksKeys.reduce((previousArray, currentDate) => {
-            if (this.props.startOfTheWeek.startOf('minute').toDate().getTime() < currentDate) {
+            if (this.props.startOfTheWeek.startOf('minute').toDate().getTime() <= currentDate) {
                 Object.keys(tasks[currentDate]).forEach((taskId) => {
                     if (!previousArray[currentDate]) {
                         previousArray[currentDate] = {};
@@ -72,7 +71,12 @@ class App extends Component {
 
         return (
             <div className="app">
-                <h1>{ title }</h1>
+            {!this.props.currentUser && <SignIn />}
+            {this.props.currentUser && <div className="dashboard">
+                <div className="header">
+                    <h1>{ title }</h1>
+                    <SignOut/>
+                </div>
                 <Week
                     today={today}
                     days={days}
@@ -84,7 +88,10 @@ class App extends Component {
                     tasks={this.props.tasks}
                     startOfTheWeek={this.props.startOfTheWeek}
                 />
-                <TasksTable selectedDay={this.props.selectedDay} availableTasks={this.props.tasks}/>
+                { this.props.isPomodoroStarted ? <PomodoroTimer/> :
+                    <TasksTable selectedDay={this.props.selectedDay} availableTasks={this.props.tasks}/> }
+            </div>
+            }
             </div>
         );
     }
@@ -96,10 +103,9 @@ App.propTypes = {
     today: PropTypes.func.isRequired,
     selectedDay: PropTypes.func.isRequired,
     startOfTheWeek: PropTypes.func.isRequired,
-    getTasks: PropTypes.func.isRequired,
-    getCompletedTasks: PropTypes.func.isRequired,
-    watchTaskAddedEvent: PropTypes.func.isRequired,
-    watchTaskFinishedEvent: PropTypes.func.isRequired,
+    watchUserLoginEvent: PropTypes.func.isRequired,
+    isPomodoroStarted: PropTypes.bool.isRequired,
+    currentUser: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -109,23 +115,16 @@ const mapStateToProps = state => {
         today: state.today,
         startOfTheWeek: state.startOfTheWeek,
         selectedDay: state.selectedDay,
+        isPomodoroStarted: state.isPomodoroStarted,
+        currentUser: state.currentUser
     }
 };
 
 /* eslint arrow-body-style: [0] */
 const mapDispatchToProps = (dispatch) => {
     return {
-        getTasks: () => {
-            dispatch(getTasksThunk())
-        },
-        getCompletedTasks: () => {
-            dispatch(getCompletedTasksThunk())
-        },
-        watchTaskAddedEvent: () => {
-            watchTaskAddedEvent(dispatch);
-        },
-        watchTaskFinishedEvent: () => {
-            watchTaskFinishedEvent(dispatch);
+        watchUserLoginEvent: () => {
+            watchUserLoginEvent(dispatch);
         }
     }
 };

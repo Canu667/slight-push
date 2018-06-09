@@ -1,7 +1,8 @@
-import {database} from '../firebase';
+import {database, auth} from '../firebase';
 
-const tasksRef = database.ref('tasks');
-const completedTasksRef = database.ref('completedTasks');
+let tasksRef = null;
+let completedTasksRef = null;
+let loggedUser = null;
 
 export const GET_TASKS = 'GET_TASKS';
 export const GET_COMPLETED_TASKS = 'GET_COMPLETED_TASKS';
@@ -12,6 +13,8 @@ export const ADD_TASK_TO_DAY = 'ADD_TASK_TO_DAY';
 export const ADD_PREDICTION_TO_DAY = 'ADD_PREDICTION_TO_DAY';
 export const TOGGLE_TASK = 'TOGGLE_TASK';
 export const SELECT_DAY = 'SELECT_DAY';
+export const TOGGLE_POMODORO = 'TOGGLE_POMODORO';
+export const CHANGE_USER = 'CHANGE_USER';
 
 /*
  * action creators
@@ -46,6 +49,10 @@ export function addPredictionToDay(taskId, date, name) {
     return { type: ADD_PREDICTION_TO_DAY, task: {name, taskId} }
 }
 
+export function startPomodoro(taskId, date, name) {
+    return { type: TOGGLE_POMODORO, pomodoro: {name, date, taskId} }
+}
+
 export function toggleTask(task) {
     const key = task.date.startOf('minute').toDate().getTime();
     tasksRef.child(key).child(task.taskId).update({state: task.state});
@@ -62,17 +69,21 @@ export const addTask = (task) => ({type: ADD_TASK, task})
  */
 export function getTasksThunk() {
     return dispatch => {
-        tasksRef.once('value', snap => {
-            dispatch(getTasks(snap.val()));
-        })
+        if(loggedUser) {
+            tasksRef.once('value', snap => {
+                dispatch(getTasks(snap.val()));
+            })
+        }
     }
 }
 
 export function getCompletedTasksThunk() {
     return dispatch => {
-        completedTasksRef.once('value', snap => {
-            dispatch(getCompletedTasks(snap.val()));
-        })
+        if(loggedUser) {
+            completedTasksRef.once('value', snap => {
+                dispatch(getCompletedTasks(snap.val()));
+            })
+        }
     }
 }
 
@@ -86,4 +97,29 @@ export function watchTaskFinishedEvent(dispatch) {
     return completedTasksRef.on('value', (snap) => {
         dispatch(getCompletedTasks(snap.val()));
     });
+}
+
+export const changeUser = (currentUser, dispatch) => {
+    loggedUser = currentUser;
+
+    tasksRef = null;
+    completedTasksRef = null;
+
+    if (loggedUser) {
+        tasksRef = database.ref(loggedUser.uid).child('tasks');
+        completedTasksRef = database.ref(loggedUser.uid).child('completedTasks');
+
+        getTasksThunk();
+        getCompletedTasksThunk();
+        watchTaskAddedEvent(dispatch);
+        watchTaskFinishedEvent(dispatch);
+    }
+
+    return {type: CHANGE_USER, currentUser}
+}
+
+export function watchUserLoginEvent(dispatch) {
+    auth.onAuthStateChanged((currentUser) => {
+        dispatch(changeUser(currentUser, dispatch));
+    })
 }

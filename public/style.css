@@ -1,9 +1,20 @@
-body {
-   /* background: black;*/
+.app {
+    background: #50a3a2;
+    background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
 }
 
-.tasks-table-component {
+.signin {
+    position: absolute;
+    top: 50%;
+    left: 46%;
+}
 
+.signout {
+    margin-top: 25px;
 }
 
 .task {
@@ -12,7 +23,7 @@ body {
     padding-bottom: 10px;
 }
 
-.day-task, .week-task {
+.day-task, .week-task, .header {
     display: flex;
     justify-content: space-evenly;
     width: '100%';

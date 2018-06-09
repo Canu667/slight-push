@@ -29,6 +29,10 @@ class WeekSummary extends Component {
         const estimates = {};
 
         Object.keys(pomodoros).forEach((date) => {
+            if (this.props.startOfTheWeek.startOf('minute').toDate().getTime() > date) {
+                return;
+            }
+
            Object.keys(pomodoros[date]).forEach((taskId) => {
                if (!estimates[taskId]) {
                    estimates[taskId] = {
@@ -44,7 +48,9 @@ class WeekSummary extends Component {
 
                estimates[taskId].estimated += pomodorosEstimated;
                estimates[taskId].completed += pomodorosCompleted;
-               estimates[taskId].percent = (estimates[taskId].completed * 100) / estimates[taskId].estimated;
+
+               const percent = estimates[taskId].estimated > 0 ? (estimates[taskId].completed * 100) / estimates[taskId].estimated : 100;
+               estimates[taskId].percent = percent;
            })
         });
 
@@ -60,7 +66,7 @@ class WeekSummary extends Component {
                 {Object.keys(estimates).map((taskId) =>
                     <div className="week-task">
                         <span className="week-task-label">{estimates[taskId].name}</span>
-                        <span className="week-task-ratio">{estimates[taskId].estimated}/{estimates[taskId].completed}</span>
+                        <span className="week-task-ratio">{estimates[taskId].completed}/{estimates[taskId].estimated}</span>
                         <span className="week-task-percent">{estimates[taskId].percent}%</span>
                     </div>
                 )}

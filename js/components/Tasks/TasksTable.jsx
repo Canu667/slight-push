@@ -3,14 +3,14 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types';
 import NewTask from './NewTask';
 import Task from './Task';
-import {addTaskToDay, addPredictionToDay, createTask} from '../../actions/pomodoro';
+import {addTaskToDay, addPredictionToDay, startPomodoro, createTask} from '../../actions/pomodoro';
 
 class TasksTable extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isCreateTask: false,
+            isCreateTask: false
         };
 
         this.onCreateTask = this.onCreateTask.bind(this);
@@ -38,6 +38,7 @@ class TasksTable extends Component {
                         taskId={taskId}
                         onAddTask={this.props.handleAddTask}
                         onAddPrediction={this.props.handleAddPrediction}
+                        onStartPomodoro={this.props.handleStartPomodoro}
                         />
                     )
                 }
@@ -66,6 +67,7 @@ TasksTable.propTypes = {
     handleCreateTask: PropTypes.func.isRequired,
     handleAddTask: PropTypes.func.isRequired,
     handleAddPrediction: PropTypes.func.isRequired,
+    handleStartPomodoro: PropTypes.func.isRequired,
 };
 
 /* eslint arrow-body-style: [0] */
@@ -79,6 +81,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         handleAddPrediction: (taskId, date, name) => {
             dispatch(addPredictionToDay(taskId, date, name));
+        },
+        handleStartPomodoro: (taskId, date, name) => {
+            dispatch(startPomodoro(taskId, date, name));
         }
     }
 };

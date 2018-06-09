@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react';
 
-const Task  = ({ selectedDay, name, taskId, onAddTask, onAddPrediction }) =>
+const Task  = ({ selectedDay, name, taskId, onAddTask, onAddPrediction, onStartPomodoro }) =>
         <div className="task">
             <span className="task-label">{name}</span>
             <button type="button" className="btn btn-default btn-sm task-button-pomodoro" onClick={() => {
@@ -12,6 +12,11 @@ const Task  = ({ selectedDay, name, taskId, onAddTask, onAddPrediction }) =>
                 onAddPrediction(taskId, selectedDay, name);
             }}>
                 <span className="glyphicon glyphicon-plus"/> Add Prediction
+            </button>
+            <button type="button" className="btn btn-default btn-sm task-button-pomodoro" onClick={() => {
+                onStartPomodoro(taskId, selectedDay, name);
+            }}>
+                <span className="glyphicon glyphicon-plus"/> Start Pomodoro
             </button>
         </div>
 
@@ -27,6 +32,7 @@ Task.propTypes = {
     taskId: PropTypes.stringValue,
     onAddTask: PropTypes.func.isRequired,
     onAddPrediction: PropTypes.func.isRequired,
+    onStartPomodoro: PropTypes.func.isRequired,
 };
 
 export default Task;
