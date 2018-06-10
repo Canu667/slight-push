@@ -30,29 +30,32 @@ class TasksTable extends Component {
         const taskKeys = Object.keys(tasks) || {};
 
         return (
+        <div className="tasks">
             <div className="tasks-table-component">
                 {
                     taskKeys.map((taskId) => <Task
-                        selectedDay={this.props.selectedDay}
-                        name={tasks[taskId].name}
-                        taskId={taskId}
-                        onAddTask={this.props.handleAddTask}
-                        onAddPrediction={this.props.handleAddPrediction}
-                        onStartPomodoro={this.props.handleStartPomodoro}
+                            selectedDay={this.props.selectedDay}
+                            name={tasks[taskId].name}
+                            taskId={taskId}
+                            onAddTask={this.props.handleAddTask}
+                            onAddPrediction={this.props.handleAddPrediction}
+                            onStartPomodoro={this.props.handleStartPomodoro}
                         />
                     )
                 }
-                {
-                    this.state.isCreateTask ?
-                        <NewTask onSubmitTask={this.onCreateTask}/> :
-                        <button className="createTask" onClick={() => {
-                            this.setState({isCreateTask: !this.state.isCreateTask})
-                        }}>
-                            Create Task
-                        </button>
-
-                }
             </div>
+            {
+                this.state.isCreateTask ?
+                    <NewTask onSubmitTask={this.onCreateTask}/> :
+                    <button className="createTask" onClick={() => {
+                        this.setState({isCreateTask: !this.state.isCreateTask})
+                    }}>
+                        Create Task
+                    </button>
+
+            }
+        </div>
+
         );
     }
 }

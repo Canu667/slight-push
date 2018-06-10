@@ -8,7 +8,7 @@ import WeekSummary from './WeekSummary';
 import PomodoroTimer from './PomodoroTimer';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
-// import GraphSlightEdge from './GraphSlightEdge';
+import GraphSlightEdge from './GraphSlightEdge';
 import {watchUserLoginEvent} from '../actions/pomodoro';
 
 class App extends Component {
@@ -89,7 +89,10 @@ class App extends Component {
                     startOfTheWeek={this.props.startOfTheWeek}
                 />
                 { this.props.isPomodoroStarted ? <PomodoroTimer/> :
-                    <TasksTable selectedDay={this.props.selectedDay} availableTasks={this.props.tasks}/> }
+                    <div className="middleboard">
+                        <TasksTable selectedDay={this.props.selectedDay} availableTasks={this.props.tasks}/>
+                        <GraphSlightEdge startOfTheWeek={this.props.startOfTheWeek} days={days} tasks={this.props.completedTasks}/>
+                    </div>}
             </div>
             }
             </div>

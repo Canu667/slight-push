@@ -3,7 +3,7 @@ import moment from 'moment';
 const today = moment(new Date());
 const initialState = {
     today,
-    startOfTheWeek: today.startOf('week').isoWeekday(6),
+    startOfTheWeek: moment(new Date()).startOf('week').isoWeekday(6),
     numberOfCompletedPomodoros: 0,
     completedTasks: {},
     tasks:{},

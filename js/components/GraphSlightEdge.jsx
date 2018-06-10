@@ -1,44 +1,43 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
+import moment from 'moment';
 
-const GraphSlightEdge = () => {
+const d3 = window.d3;
+const WIDTH = 400;
+const HEIGHT = 180;
+const MARGINS = {
+    top: 20,
+    right: 20,
+    bottom: 20,
+    left: 50
+};
+const GraphSlightEdge = ({startOfTheWeek, tasks}) => {
 
-    let vis = d3.select("#visualisation"),
-        WIDTH = 1000,
-        HEIGHT = 500,
-        MARGINS = {
-            top: 20,
-            right: 20,
-            bottom: 20,
-            left: 50
-        },
-        xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 31]),
-        yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-31, 31]),
-        xAxis = d3.svg.axis().scale(xScale),
-        yAxis = d3.svg.axis().scale(yScale);
+    const vis = d3.select("#visualisation");
 
+    const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 31]);
+    const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-31, 31]);
+    const xAxis = d3.svg.axis().scale(xScale);
+    const yAxis = d3.svg.axis().scale(yScale);
 
     vis.append("svg:g")
-        .attr("class","axis")
-        .attr("transform", "translate(0," + HEIGHT / 2 + ")")
+        .attr("class", "axis")
+        .attr("transform", `translate(0, ${HEIGHT/2})`)
         .call(xAxis);
 
+    const mLeft = MARGINS.left;
     vis.append("svg:g")
-        .attr("class","axis")
-        .attr("transform", "translate(" + MARGINS.left + ",0)rotate(90)")
-        .call(yAxis);
+         .attr("class", "axis")
+        .attr("transform", `translate(${mLeft},0)rotate(90)`)
+         .call(yAxis);
 
     const lineGen = d3.svg.line()
-        .x(function (d) {
-            return xScale(d.day);
-        })
-        .y(function (d) {
-            return yScale(d.increment);
-        });
+        .x((d) => xScale(d.day))
+        .y((d) => yScale(d.increment));
 
     const area = d3.svg.area()
-        .x(function(d) { return xScale(d.day); })
+        .x((d) => xScale(d.day))
         .y0(HEIGHT / 2)
-        .y1(function(d) { return yScale(d.increment); });
+        .y1((d) => yScale(d.increment));
 
     const positive = [{
         "day": "0",
@@ -56,69 +55,35 @@ const GraphSlightEdge = () => {
         "increment": "-31"
     }];
 
-    const userSlightEdgeTrack = [{
-        "day": "0",
-        "increment": "0"
-    }, {
-        "day": "1",
-        "increment": "1"
-    }, {
-        "day": "2",
-        "increment": "2"
-    }, {
-        "day": "3",
-        "increment": "3"
-    }, {
-        "day": "4",
-        "increment": "2"
-    }, {
-        "day": "5",
-        "increment": "3"
-    }, {
-        "day": "6",
-        "increment": "4"
-    }, {
-        "day": "7",
-        "increment": "3"
-    }, {
-        "day": "8",
-        "increment": "4"
-    }, {
-        "day": "9",
-        "increment": "5"
-    }, {
-        "day": "10",
-        "increment": "6"
-    }, {
-        "day": "11",
-        "increment": "7"
-    }, {
-        "day": "12",
-        "increment": "8"
-    }, {
-        "day": "13",
-        "increment": "9"
-    }, {
-        "day": "14",
-        "increment": "8"
-    },{
-        "day": "15",
-        "increment": "9"
-    }];
+    /* eslint no-param-reassign: [0] */
+    const progressInWeek = Object.keys(tasks).reduce((previousArray, timestamp) => {
+            const currentDate = moment.unix(timestamp.substring(0, 10));
+            if (startOfTheWeek.get('month') === currentDate.get('month')) {
+                previousArray.push(currentDate.get('date'));
+            }
+        return previousArray;
+        }, []
+    );
 
+    const userSlightEdgeTrack = [];
+    let increment = 0;
+    for(let i = 0; i <= 30; i += 1) {
+        userSlightEdgeTrack.push({
+            'day' : i,
+            'increment' : increment
+        });
+        if (progressInWeek.indexOf(i) !== -1) {
+            increment += 1;
+        } else {
+            increment -= 1;
+        }
+    }
 
     vis.append('svg:path')
         .attr('d', lineGen(positive))
         .attr('stroke', 'green')
         .attr('stroke-width', 3)
         .attr('fill', 'none');
-
-    vis.append('text')
-        .attr('class', 'barsEndlineText')
-        .attr('text-anchor', 'middle')
-        .attr("x", 400)
-        .attr("y", "150")
-        .text('MAX')
 
     vis.append('svg:path')
         .attr('d', lineGen(negative))
@@ -135,14 +100,19 @@ const GraphSlightEdge = () => {
         .attr('fill', 'none');
 
     return (
-        <div className="container">
-
-            <div className="jumbotron">
-                <svg id="visualisation" width="1000" height="500"/>
-            </div>
-
+        <div className="graph-container">
+                <svg id="visualisation" width="{WIDTH}" height="{HEIGHT}"/>
         </div>
     )
 }
+
+GraphSlightEdge.defaultProps = {
+    tasks: {}
+};
+
+GraphSlightEdge.propTypes = {
+    startOfTheWeek: PropTypes.func.isRequired,
+    tasks: PropTypes.func.isRequired,
+};
 
 export default GraphSlightEdge;

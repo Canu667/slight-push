@@ -17,10 +17,53 @@
     margin-top: 25px;
 }
 
+.dashboard {
+    margin: 0px 20px 0px 20px;
+}
+
+.middleboard {
+    display: flex;
+}
+
+button{
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    padding: 6px 20px;
+    margin: 0;
+    cursor: pointer;
+    border: 1px solid #bbb;
+    overflow: visible;
+    font: bold 13px arial, helvetica, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+    color: #555;
+    background-color: #ddd;
+    background-image: linear-gradient(top, rgba(255,255,255,1),
+    rgba(255,255,255,0)),
+    url(data:image/png;base64,iVBORw0KGg[...]QmCC);
+    transition: background-color .2s ease-out;
+    background-clip: padding-box; /* Fix bleeding */
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, .3),
+    0 2px 2px -1px rgba(0, 0, 0, .5),
+    0 1px 0 rgba(255, 255, 255, .3) inset;
+    text-shadow: 0 1px 0 rgba(255,255,255, .9);
+}
+
 .task {
     display: flex;
     padding-left: 10px;
     padding-bottom: 10px;
+    margin-right: 5px;
+}
+
+.tasks {
+    flex: 1.5;
+}
+.graph-container {
+    flex: 1;
+    padding: 0px;
 }
 
 .day-task, .week-task, .header {
@@ -47,7 +90,7 @@
 }
 
 .task-label, .task-button-pomodoro, .task-button-prediction {
-    flex: 0.1;
+    flex: 1;
 }
 
 .unfinished {
@@ -59,11 +102,15 @@
     justify-content: space-around;
     border: 1px solid black;
     padding: 20px 20px;
+    border-radius: 15px;
 }
 
 .day {
     padding: 20px 20px;
     border: 1px solid black;
+    border-radius: 15px;
+    color: white;
+    background-color: #5cb85c;
 }
 
 .selected-day {
