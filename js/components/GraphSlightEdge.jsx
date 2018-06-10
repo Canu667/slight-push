@@ -2,7 +2,7 @@ import React, { PropTypes } from 'react';
 import moment from 'moment';
 
 const d3 = window.d3;
-const WIDTH = 400;
+const WIDTH = 600;
 const HEIGHT = 180;
 const MARGINS = {
     top: 20,
