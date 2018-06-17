@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 import moment from 'moment';
 
 const d3 = window.d3;
@@ -10,7 +10,7 @@ const MARGINS = {
     bottom: 20,
     left: 50
 };
-const GraphSlightEdge = ({startOfTheWeek, tasks}) => {
+const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
 
     const vis = d3.select("#visualisation");
 
@@ -21,23 +21,18 @@ const GraphSlightEdge = ({startOfTheWeek, tasks}) => {
 
     vis.append("svg:g")
         .attr("class", "axis")
-        .attr("transform", `translate(0, ${HEIGHT/2})`)
+        .attr("transform", `translate(0, ${HEIGHT / 2})`)
         .call(xAxis);
 
     const mLeft = MARGINS.left;
     vis.append("svg:g")
-         .attr("class", "axis")
+        .attr("class", "axis")
         .attr("transform", `translate(${mLeft},0)rotate(90)`)
-         .call(yAxis);
+        .call(yAxis);
 
     const lineGen = d3.svg.line()
         .x((d) => xScale(d.day))
         .y((d) => yScale(d.increment));
-
-    const area = d3.svg.area()
-        .x((d) => xScale(d.day))
-        .y0(HEIGHT / 2)
-        .y1((d) => yScale(d.increment));
 
     const positive = [{
         "day": "0",
@@ -58,26 +53,38 @@ const GraphSlightEdge = ({startOfTheWeek, tasks}) => {
     /* eslint no-param-reassign: [0] */
     const progressInWeek = Object.keys(tasks).reduce((previousArray, timestamp) => {
             const currentDate = moment.unix(timestamp.substring(0, 10));
-            if (startOfTheWeek.get('month') === currentDate.get('month')) {
-                previousArray.push(currentDate.get('date'));
+            if (startOfTheWeek.get('month') === currentDate.get('month')
+            ) {
+                const date = currentDate.get('date');
+                previousArray[date] = tasks[timestamp];
             }
-        return previousArray;
-        }, []
+            return previousArray;
+        }, {}
     );
 
-    const userSlightEdgeTrack = [];
-    let increment = 0;
-    for(let i = 0; i <= 30; i += 1) {
-        userSlightEdgeTrack.push({
-            'day' : i,
-            'increment' : increment
-        });
-        if (progressInWeek.indexOf(i) !== -1) {
-            increment += 1;
-        } else {
-            increment -= 1;
+    const graphIncrementGroups = {};
+    Object.keys(taskGroups).forEach((taskGroup) => {
+        graphIncrementGroups[taskGroup] = [];
+        let increment = 1;
+        /* eslint no-loop-func: [0] */
+        for (let i = 0; i <= 30; i += 1) {
+            let modifier = -1;
+            if (progressInWeek[i]) {
+                taskGroups[taskGroup].tasks.forEach((taskId) => {
+                    if (progressInWeek[i][taskId]) {
+                        modifier = 1;
+                    }
+                });
+            }
+
+            increment += modifier;
+
+            graphIncrementGroups[taskGroup].push({
+                'day': i,
+                'increment': increment
+            });
         }
-    }
+    });
 
     vis.append('svg:path')
         .attr('d', lineGen(positive))
@@ -91,28 +98,47 @@ const GraphSlightEdge = ({startOfTheWeek, tasks}) => {
         .attr('stroke-width', 3)
         .attr('fill', 'none');
 
-    vis.append('svg:path')
-        .attr('d', lineGen(userSlightEdgeTrack))
-        .attr('stroke', 'purple')
-        .attr('stroke-width', 3)
-        .attr("class", "area")
-        .attr("d", area(userSlightEdgeTrack))
-        .attr('fill', 'none');
+    Object.keys(taskGroups).forEach((taskGroup) => {
+        vis.append('svg:path')
+            .attr('d', lineGen(graphIncrementGroups[taskGroup]))
+            .attr('stroke', taskGroups[taskGroup].color)
+            .attr('stroke-width', 3)
+            .attr('fill', 'none');
+    });
 
     return (
         <div className="graph-container">
-                <svg id="visualisation" width="{WIDTH}" height="{HEIGHT}"/>
+            <svg id="visualisation" width="{WIDTH}" height="{HEIGHT}"/>
         </div>
     )
 }
 
 GraphSlightEdge.defaultProps = {
-    tasks: {}
+    tasks: {},
+    taskGroups: {
+        'programming': {
+            tasks: ['-LBpnbJ1_-gMJugb5whT', '-LBpreZ1QNhekUdkNyNd'],
+            color: 'blue'
+        },
+        'deutsch': {
+            tasks: ['-LBpn_ddwuQeu6bc4LPK'],
+            color: 'green'
+        },
+        'gym': {
+            tasks: ['-LCAYGjrjsT6RCBkZ2qi'],
+            color: 'orange'
+        },
+        'aws': {
+            tasks: ['-LFD5IWCPjmHP6_1NdcB'],
+            color: 'yellow'
+        }
+    }
 };
 
 GraphSlightEdge.propTypes = {
     startOfTheWeek: PropTypes.func.isRequired,
     tasks: PropTypes.func.isRequired,
+    taskGroups: PropTypes.func
 };
 
 export default GraphSlightEdge;
