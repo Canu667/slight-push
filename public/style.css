@@ -1,6 +1,12 @@
+html, body {
+    margin: 0px;
+    padding: 0px;
+}
+
 .app {
     background: #50a3a2;
     background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+    padding-bottom: 40px;
 }
 
 .signin {
@@ -60,6 +66,20 @@ button{
 .graph-container {
     flex: 1;
     padding: 0px;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-evenly;
+    width: '100%';
+}
+
+.legend-label {
+    flex: 1;
+    border: 1px solid black;
+    font-weight: bold;
+    color: black;
+    text-align: center;
 }
 
 .day-task, .week-task, .header {

@@ -3,7 +3,7 @@ import moment from 'moment';
 
 const d3 = window.d3;
 const WIDTH = 600;
-const HEIGHT = 180;
+const HEIGHT = 350;
 const MARGINS = {
     top: 20,
     right: 20,
@@ -72,7 +72,13 @@ const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
             if (progressInWeek[i]) {
                 taskGroups[taskGroup].tasks.forEach((taskId) => {
                     if (progressInWeek[i][taskId]) {
-                        modifier = 1;
+                        const estimated = progressInWeek[i][taskId].estimated || 0;
+
+                        const completedArray = Object.keys(progressInWeek[i][taskId]).completed || [];
+                        const done = completedArray.length;
+                        if (done >= estimated) {
+                            modifier = 1;
+                        }
                     }
                 });
             }
@@ -99,7 +105,9 @@ const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
         .attr('fill', 'none');
 
     Object.keys(taskGroups).forEach((taskGroup) => {
+        const id = `${taskGroup}-line`;
         vis.append('svg:path')
+            .attr("id", id)
             .attr('d', lineGen(graphIncrementGroups[taskGroup]))
             .attr('stroke', taskGroups[taskGroup].color)
             .attr('stroke-width', 3)
@@ -109,6 +117,14 @@ const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
     return (
         <div className="graph-container">
             <svg id="visualisation" width="{WIDTH}" height="{HEIGHT}"/>
+                <div className="legend">
+                    {Object.keys(taskGroups).map(groupName => {
+                        const groupColor = {
+                            backgroundColor: taskGroups[groupName].color
+                        };
+                       return <div className="legend-label" style={groupColor}>{groupName}</div>;
+                    })}
+                </div>
         </div>
     )
 }
@@ -121,11 +137,11 @@ GraphSlightEdge.defaultProps = {
             color: 'blue'
         },
         'deutsch': {
-            tasks: ['-LBpn_ddwuQeu6bc4LPK'],
+            tasks: ['-LBpn_ddwuQeu6bc4LPK', '-LFE9UiKlYXOrXM5Q54b'],
             color: 'green'
         },
-        'gym': {
-            tasks: ['-LCAYGjrjsT6RCBkZ2qi'],
+        'weight': {
+            tasks: ['-LFE9GqlKceeLK8T7yS_', '-LFE9-NKcc7cqxUUxAhB'],
             color: 'orange'
         },
         'aws': {
