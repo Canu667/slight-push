@@ -74,8 +74,9 @@ const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
                     if (progressInWeek[i][taskId]) {
                         const estimated = progressInWeek[i][taskId].estimated || 0;
 
-                        const completedArray = Object.keys(progressInWeek[i][taskId]).completed || [];
-                        const done = completedArray.length;
+                        const completedHashArray = progressInWeek[i][taskId].completed || [];
+                        const done = Object.keys(completedHashArray).length;
+
                         if (done >= estimated) {
                             modifier = 1;
                         }
@@ -133,7 +134,7 @@ GraphSlightEdge.defaultProps = {
     tasks: {},
     taskGroups: {
         'programming': {
-            tasks: ['-LBpnbJ1_-gMJugb5whT', '-LBpreZ1QNhekUdkNyNd'],
+            tasks: ['-LBpnbJ1_-gMJugb5whT', '-LBpreZ1QNhekUdkNyNd', '-LFD5IWCPjmHP6_1NdcB', '-LFD5IWCPjmHP6_1NdcB'],
             color: 'blue'
         },
         'deutsch': {
