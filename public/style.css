@@ -15,7 +15,7 @@ html, body {
     left: 46%;
 }
 
-.signout {
+.signout, .changeWeek {
     margin-top: 25px;
 }
 

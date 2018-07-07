@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { ADD_TASK, GET_TASKS, GET_COMPLETED_TASKS, SELECT_DAY, TOGGLE_POMODORO, CHANGE_USER } from '../actions/pomodoro';
+import { ADD_TASK, GET_TASKS, GET_COMPLETED_TASKS, SELECT_DAY, TOGGLE_POMODORO, CHANGE_USER, CHANGE_WEEK } from '../actions/pomodoro';
 import initialState from '../initialState';
 
 function completedTasks(doneTasks = initialState.completedTasks, action) {
@@ -44,8 +44,14 @@ function selectedDay(state = initialState.selectedDay, action) {
     }
 }
 
-function startOfTheWeek(state = initialState.startOfTheWeek) {
-    return state;
+function startOfTheWeek(state = initialState.startOfTheWeek, action) {
+    switch (action.type) {
+        case CHANGE_WEEK: {
+            return action.startOfTheWeek;
+        }
+        default:
+            return state;
+    }
 }
 
 function isPomodoroStarted(state = initialState.isPomodoroStarted, action) {

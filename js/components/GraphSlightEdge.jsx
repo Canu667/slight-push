@@ -11,8 +11,9 @@ const MARGINS = {
     left: 50
 };
 const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
+    d3.select("svg").remove();
 
-    const vis = d3.select("#visualisation");
+    const vis = d3.select(".graph-container").append("svg").attr("width",WIDTH).attr("height", HEIGHT);
 
     const xScale = d3.scale.linear().range([MARGINS.left, WIDTH - MARGINS.right]).domain([0, 31]);
     const yScale = d3.scale.linear().range([HEIGHT - MARGINS.top, MARGINS.bottom]).domain([-31, 31]);
@@ -117,7 +118,7 @@ const GraphSlightEdge = ({startOfTheWeek, tasks, taskGroups}) => {
 
     return (
         <div className="graph-container">
-            <svg id="visualisation" width="{WIDTH}" height="{HEIGHT}"/>
+            <svg width="{WIDTH}" height="{HEIGHT}"/>
                 <div className="legend">
                     {Object.keys(taskGroups).map(groupName => {
                         const groupColor = {

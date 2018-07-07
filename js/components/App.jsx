@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux'
+// import moment from 'moment';
+
 // import PomodoroTimer from './PomodoroTimer';
 import Week from './Week';
 import TasksTable from './Tasks/TasksTable';
@@ -9,7 +11,9 @@ import PomodoroTimer from './PomodoroTimer';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
 import GraphSlightEdge from './GraphSlightEdge';
-import {watchUserLoginEvent} from '../actions/pomodoro';
+import ChangeWeek from './ChangeWeek';
+import {watchUserLoginEvent, changeWeek} from '../actions/pomodoro';
+
 
 class App extends Component {
     constructor(props) {
@@ -66,6 +70,7 @@ class App extends Component {
         const {today} = this.props;
         const title = `Today is ${today.format('dddd, DD-MM-YYYY')}`;
         const days = this.generateDays();
+        const currentWeek = this.props.startOfTheWeek.clone();
 
         const dayTasks = this.getDayTasks();
 
@@ -76,6 +81,11 @@ class App extends Component {
                 <div className="header">
                     <h1>{ title }</h1>
                     <SignOut/>
+                    <ChangeWeek
+                        backward={() => this.props.changeWeek(currentWeek.subtract(1, 'week'))}
+                        reset={() => this.props.changeWeek(this.props.startOfTheWeek)}
+                        forward={() => this.props.changeWeek(currentWeek.add(1, 'week'))}
+                    />
                 </div>
                 <Week
                     today={today}
@@ -108,7 +118,8 @@ App.propTypes = {
     startOfTheWeek: PropTypes.func.isRequired,
     watchUserLoginEvent: PropTypes.func.isRequired,
     isPomodoroStarted: PropTypes.bool.isRequired,
-    currentUser: PropTypes.func.isRequired
+    currentUser: PropTypes.func.isRequired,
+    changeWeek: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
@@ -128,7 +139,12 @@ const mapDispatchToProps = (dispatch) => {
     return {
         watchUserLoginEvent: () => {
             watchUserLoginEvent(dispatch);
+        },
+        changeWeek: (startOfWeek) => {
+            // console.log(startOfWeek);
+            dispatch(changeWeek(startOfWeek));
         }
+
     }
 };
 

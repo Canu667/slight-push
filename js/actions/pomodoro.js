@@ -15,6 +15,7 @@ export const TOGGLE_TASK = 'TOGGLE_TASK';
 export const SELECT_DAY = 'SELECT_DAY';
 export const TOGGLE_POMODORO = 'TOGGLE_POMODORO';
 export const CHANGE_USER = 'CHANGE_USER';
+export const CHANGE_WEEK = 'CHANGE_WEEK';
 
 /*
  * action creators
@@ -23,6 +24,10 @@ export const CHANGE_USER = 'CHANGE_USER';
 export function addPomodoro(task) {
     confirm("Did you do a Pomodoro?");
     return { type: ADD_POMODORO, task }
+}
+
+export function changeWeek(startOfTheWeek) {
+    return { type: CHANGE_WEEK, startOfTheWeek }
 }
 
 export function selectDay(date) {
